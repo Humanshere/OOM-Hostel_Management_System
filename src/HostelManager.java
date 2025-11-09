@@ -12,6 +12,10 @@ class HostelManager {
         return dbManager.addStudent(student);
     }
     
+    public boolean updateStudent(Student student) {
+        return dbManager.updateStudent(student);
+    }
+    
     public Student findStudentById(String studentId) {
         return dbManager.getStudentById(studentId);
     }

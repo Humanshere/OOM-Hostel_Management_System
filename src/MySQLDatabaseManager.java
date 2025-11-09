@@ -78,6 +78,22 @@ class MySQLDatabaseManager {
         }
     }
     
+    public boolean updateStudent(Student student) {
+        String sql = "UPDATE students SET name = ?, email = ?, phone = ?, department = ? WHERE student_id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, student.getName());
+            pstmt.setString(2, student.getEmail());
+            pstmt.setString(3, student.getPhone());
+            pstmt.setString(4, student.getDepartment());
+            pstmt.setString(5, student.getStudentId());
+            pstmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.err.println("Error updating student: " + e.getMessage());
+            return false;
+        }
+    }
+    
     public Student getStudentById(String studentId) {
         String sql = "SELECT * FROM students WHERE student_id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
