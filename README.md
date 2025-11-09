@@ -19,10 +19,18 @@ brew services start mysql
 # Use MySQL Workbench or command line
 ```
 
-### 2. Set MySQL Root Password (if not already set)
+### 2. Set MySQL Root Password (if not already set), login and create db
 ```bash
 sudo mariadb -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '';"
+
+# Login to MariaDB
+sudo mysql -u root -p
+
+# Create database
+CREATE DATABASE hostel_db;
+
 ```
+
 
 ### 3. Compile the Application
 ```bash
