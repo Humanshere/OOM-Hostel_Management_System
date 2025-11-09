@@ -61,7 +61,7 @@ class MySQLDatabaseManager {
         }
     }
     
-    // Student operations
+
     public boolean addStudent(Student student) {
         String sql = "INSERT INTO students (student_id, name, email, phone, department) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -138,7 +138,7 @@ class MySQLDatabaseManager {
         try {
             connection.setAutoCommit(false);
             
-            // First, get any active allocations for this student to update room occupancy
+
             String allocSql = "SELECT * FROM allocations WHERE student_id = ? AND status = 'Active'";
             try (PreparedStatement pstmt = connection.prepareStatement(allocSql)) {
                 pstmt.setString(1, studentId);
@@ -153,14 +153,14 @@ class MySQLDatabaseManager {
                 }
             }
             
-            // Delete all allocations for this student
+
             String deleteAllocSql = "DELETE FROM allocations WHERE student_id = ?";
             try (PreparedStatement pstmt = connection.prepareStatement(deleteAllocSql)) {
                 pstmt.setString(1, studentId);
                 pstmt.executeUpdate();
             }
             
-            // Delete the student
+
             String deleteStudentSql = "DELETE FROM students WHERE student_id = ?";
             try (PreparedStatement pstmt = connection.prepareStatement(deleteStudentSql)) {
                 pstmt.setString(1, studentId);
@@ -185,7 +185,7 @@ class MySQLDatabaseManager {
         }
     }
     
-    // Room operations
+
     public boolean addRoom(Room room) {
         String sql = "INSERT INTO rooms (room_number, room_type, capacity, occupied, rent_per_bed, floor) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -282,7 +282,7 @@ class MySQLDatabaseManager {
         }
     }
     
-    // Allocation operations
+
     public boolean addAllocation(Allocation allocation) {
         String sql = "INSERT INTO allocations (allocation_id, student_id, room_number, allocation_date, checkout_date, status) VALUES (?, ?, ?, ?, ?, ?)";
         try {

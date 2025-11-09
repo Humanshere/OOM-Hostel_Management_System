@@ -1,8 +1,6 @@
-// HostelManagementGUI.java - Swing GUI Application with MySQL Integration
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import javax.swing.plaf.basic.BasicComboBoxUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
@@ -12,13 +10,11 @@ public class HostelManagementGUI extends JFrame {
     private HostelManager hostelManager;
     private JTabbedPane tabbedPane;
     
-    // Student panel components
     private JTextField studentIdField, studentNameField, studentEmailField;
     private JTextField studentPhoneField, studentDeptField;
     private JTable studentTable;
     private DefaultTableModel studentTableModel;
     
-    // Room panel components
     private JTextField roomNumberField, roomFloorField;
     private JComboBox<String> roomTypeCombo;
     private JSpinner rentSpinner;
@@ -27,38 +23,34 @@ public class HostelManagementGUI extends JFrame {
     private JButton filterAvailableButton;
     private boolean showOnlyAvailable = false;
     
-    // Allocation panel components
     private JComboBox<String> allocStudentCombo, allocRoomCombo;
     private JTable allocationTable;
     private DefaultTableModel allocationTableModel;
     private JButton filterActiveButton;
     private boolean showOnlyActive = false;
     
-    // Color scheme
-    private static final Color PRIMARY_COLOR = new Color(70, 130, 180);      // Steel Blue
-    private static final Color SECONDARY_COLOR = new Color(100, 149, 237);   // Cornflower Blue
-    private static final Color SUCCESS_COLOR = new Color(34, 139, 34);       // Forest Green
-    private static final Color DANGER_COLOR = new Color(220, 20, 60);        // Crimson
-    private static final Color HEADER_COLOR = new Color(47, 79, 79);         // Dark Slate Gray
-    private static final Color BG_COLOR = new Color(245, 245, 245);          // Light Gray
+    private static final Color PRIMARY_COLOR = new Color(70, 130, 180);
+    private static final Color SECONDARY_COLOR = new Color(100, 149, 237);
+    private static final Color SUCCESS_COLOR = new Color(34, 139, 34);
+    private static final Color DANGER_COLOR = new Color(220, 20, 60);
+    private static final Color HEADER_COLOR = new Color(47, 79, 79);
+    private static final Color BG_COLOR = new Color(245, 245, 245);
     
     public HostelManagementGUI() {
         hostelManager = new HostelManager();
         
-        setTitle("🏢 Hostel Management System - MySQL Edition");
+        setTitle("Hostel Management System");
         setSize(1200, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         
-        // Set modern look and feel
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (Exception e) {
             e.printStackTrace();
         }
         
-        // Add window listener to close database connection
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -75,31 +67,29 @@ public class HostelManagementGUI extends JFrame {
         tabbedPane = new JTabbedPane();
         tabbedPane.setFont(new Font("Segoe UI", Font.BOLD, 13));
         
-        // Style tabbed pane
         tabbedPane.setBackground(PRIMARY_COLOR);
         tabbedPane.setForeground(Color.WHITE);
         
-        // Add tabs
-        tabbedPane.addTab("👥 Students", createStudentPanel());
-        tabbedPane.addTab("🛏️ Rooms", createRoomPanel());
-        tabbedPane.addTab("📋 Allocations", createAllocationPanel());
-        tabbedPane.addTab("📊 Reports", createReportPanel());
+        tabbedPane.addTab("Students", createStudentPanel());
+        tabbedPane.addTab("Rooms", createRoomPanel());
+        tabbedPane.addTab("Allocations", createAllocationPanel());
+        tabbedPane.addTab("Reports", createReportPanel());
         
         add(tabbedPane);
     }
     
-    // ==================== STUDENT PANEL ====================
+
     private JPanel createStudentPanel() {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
         panel.setBackground(BG_COLOR);
         panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         
-        // Top panel with search
+
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         searchPanel.setBackground(Color.WHITE);
         searchPanel.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(PRIMARY_COLOR, 1),
-            "🔍 Search Student",
+            "Find Student",
             javax.swing.border.TitledBorder.LEFT,
             javax.swing.border.TitledBorder.TOP,
             new Font("Segoe UI", Font.BOLD, 11),
@@ -110,8 +100,8 @@ public class HostelManagementGUI extends JFrame {
         searchLabel.setForeground(HEADER_COLOR);
         JTextField searchField = new JTextField(20);
         searchField.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        JButton searchButton = createStyledButton("🔎 Search", PRIMARY_COLOR);
-        JButton clearSearchButton = createStyledButton("✖️ Clear", SECONDARY_COLOR);
+        JButton searchButton = createStyledButton("Search", PRIMARY_COLOR);
+        JButton clearSearchButton = createStyledButton("Clear", SECONDARY_COLOR);
         
         searchButton.addActionListener(e -> {
             String query = searchField.getText().trim();
@@ -131,12 +121,12 @@ public class HostelManagementGUI extends JFrame {
         searchPanel.add(searchButton);
         searchPanel.add(clearSearchButton);
         
-        // Input form
+
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setBackground(Color.WHITE);
         formPanel.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(PRIMARY_COLOR, 2),
-            "➕ Add New Student / ✏️ Update Student",
+            " Add New Student /  Update Student",
             javax.swing.border.TitledBorder.LEFT,
             javax.swing.border.TitledBorder.TOP,
             new Font("Segoe UI", Font.BOLD, 12),
@@ -147,7 +137,7 @@ public class HostelManagementGUI extends JFrame {
         gbc.insets = new Insets(8, 8, 8, 8);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         
-        // Student ID
+
         gbc.gridx = 0; gbc.gridy = 0;
         JLabel idLabel = new JLabel("Student ID:");
         idLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
@@ -162,7 +152,7 @@ public class HostelManagementGUI extends JFrame {
         ));
         formPanel.add(studentIdField, gbc);
         
-        // Name
+
         gbc.gridx = 0; gbc.gridy = 1;
         JLabel nameLabel = new JLabel("Name:");
         nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
@@ -177,7 +167,7 @@ public class HostelManagementGUI extends JFrame {
         ));
         formPanel.add(studentNameField, gbc);
         
-        // Email
+
         gbc.gridx = 0; gbc.gridy = 2;
         JLabel emailLabel = new JLabel("Email:");
         emailLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
@@ -192,7 +182,7 @@ public class HostelManagementGUI extends JFrame {
         ));
         formPanel.add(studentEmailField, gbc);
         
-        // Phone
+
         gbc.gridx = 0; gbc.gridy = 3;
         JLabel phoneLabel = new JLabel("Phone:");
         phoneLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
@@ -207,7 +197,7 @@ public class HostelManagementGUI extends JFrame {
         ));
         formPanel.add(studentPhoneField, gbc);
         
-        // Department
+
         gbc.gridx = 0; gbc.gridy = 4;
         JLabel deptLabel = new JLabel("Department:");
         deptLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
@@ -222,14 +212,14 @@ public class HostelManagementGUI extends JFrame {
         ));
         formPanel.add(studentDeptField, gbc);
         
-        // Buttons
+
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.setBackground(Color.WHITE);
         
-        JButton addButton = createStyledButton("➕ Add Student", SUCCESS_COLOR);
-        JButton updateButton = createStyledButton("✏️ Update Student", PRIMARY_COLOR);
-        JButton deleteButton = createStyledButton("❌ Delete Selected", DANGER_COLOR);
-        JButton refreshButton = createStyledButton("🔄 Refresh", SECONDARY_COLOR);
+        JButton addButton = createStyledButton(" Add Student", SUCCESS_COLOR);
+        JButton updateButton = createStyledButton(" Update Student", PRIMARY_COLOR);
+        JButton deleteButton = createStyledButton(" Delete Selected", DANGER_COLOR);
+        JButton refreshButton = createStyledButton(" Refresh", SECONDARY_COLOR);
         
         addButton.addActionListener(e -> addStudent());
         updateButton.addActionListener(e -> updateStudent());
@@ -244,7 +234,7 @@ public class HostelManagementGUI extends JFrame {
         gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 2;
         formPanel.add(buttonPanel, gbc);
         
-        // Table
+
         String[] columnNames = {"Student ID", "Name", "Email", "Phone", "Department"};
         studentTableModel = new DefaultTableModel(columnNames, 0) {
             @Override
@@ -257,7 +247,7 @@ public class HostelManagementGUI extends JFrame {
         studentTable.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         studentTable.setRowHeight(25);
         
-        // Style table header
+
         JTableHeader studentHeader = studentTable.getTableHeader();
         studentHeader.setBackground(PRIMARY_COLOR);
         studentHeader.setForeground(Color.WHITE);
@@ -267,7 +257,7 @@ public class HostelManagementGUI extends JFrame {
         studentTable.setSelectionBackground(SECONDARY_COLOR);
         studentTable.setSelectionForeground(Color.WHITE);
         
-        // Add mouse listener to populate form when row is selected
+
         studentTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -281,14 +271,14 @@ public class HostelManagementGUI extends JFrame {
         JScrollPane scrollPane = new JScrollPane(studentTable);
         scrollPane.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(PRIMARY_COLOR, 1),
-            "📚 All Students",
+            " All Students",
             javax.swing.border.TitledBorder.LEFT,
             javax.swing.border.TitledBorder.TOP,
             new Font("Segoe UI", Font.BOLD, 12),
             PRIMARY_COLOR
         ));
         
-        // Create top panel with search
+
         JPanel topPanel = new JPanel(new BorderLayout(10, 10));
         topPanel.setBackground(BG_COLOR);
         topPanel.add(searchPanel, BorderLayout.NORTH);
@@ -440,7 +430,7 @@ public class HostelManagementGUI extends JFrame {
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.setPreferredSize(new Dimension(150, 35));
         
-        // Add hover effect
+
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -464,9 +454,7 @@ public class HostelManagementGUI extends JFrame {
         );
     }
     
-    /**
-     * Setup searchable functionality for a combo box
-     */
+    
     private void setupSearchableCombo(JComboBox<String> comboBox) {
         JTextField textField = (JTextField) comboBox.getEditor().getEditorComponent();
         textField.addKeyListener(new KeyAdapter() {
@@ -479,19 +467,17 @@ public class HostelManagementGUI extends JFrame {
                         return;
                     }
                     
-                    // Simply show popup on any input
+
                     comboBox.showPopup();
                 } catch (Exception ex) {
-                    // Silently ignore any exceptions during search
+
                     ex.printStackTrace();
                 }
             }
         });
     }
     
-    /**
-     * Refresh allocation dropdowns with latest data
-     */
+    
     private void refreshAllocationDropdowns() {
         allocStudentCombo.removeAllItems();
         allocRoomCombo.removeAllItems();
@@ -507,18 +493,18 @@ public class HostelManagementGUI extends JFrame {
         }
     }
     
-    // ==================== ROOM PANEL ====================
+
     private JPanel createRoomPanel() {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
         panel.setBackground(BG_COLOR);
         panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         
-        // Input form
+
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setBackground(Color.WHITE);
         formPanel.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(PRIMARY_COLOR, 2),
-            "➕ Add New Room",
+            " Add New Room",
             javax.swing.border.TitledBorder.LEFT,
             javax.swing.border.TitledBorder.TOP,
             new Font("Segoe UI", Font.BOLD, 12),
@@ -528,7 +514,7 @@ public class HostelManagementGUI extends JFrame {
         gbc.insets = new Insets(8, 8, 8, 8);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         
-        // Room Number
+
         gbc.gridx = 0; gbc.gridy = 0;
         JLabel roomNumLabel = new JLabel("Room Number:");
         roomNumLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
@@ -543,7 +529,7 @@ public class HostelManagementGUI extends JFrame {
         ));
         formPanel.add(roomNumberField, gbc);
         
-        // Room Type
+
         gbc.gridx = 0; gbc.gridy = 1;
         JLabel typeLabel = new JLabel("Room Type:");
         typeLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
@@ -554,9 +540,9 @@ public class HostelManagementGUI extends JFrame {
         roomTypeCombo.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         formPanel.add(roomTypeCombo, gbc);
         
-        // Rent per Bed
+
         gbc.gridx = 0; gbc.gridy = 2;
-        JLabel rentLabel = new JLabel("Rent per Bed (₹):");
+        JLabel rentLabel = new JLabel("Rent per Bed (Rs Rs ):");
         rentLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
         rentLabel.setForeground(HEADER_COLOR);
         formPanel.add(rentLabel, gbc);
@@ -564,7 +550,7 @@ public class HostelManagementGUI extends JFrame {
         rentSpinner = new JSpinner(new SpinnerNumberModel(2000.0, 1000.0, 10000.0, 100.0));
         formPanel.add(rentSpinner, gbc);
         
-        // Floor
+
         gbc.gridx = 0; gbc.gridy = 3;
         JLabel floorLabel = new JLabel("Floor:");
         floorLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
@@ -579,12 +565,12 @@ public class HostelManagementGUI extends JFrame {
         ));
         formPanel.add(roomFloorField, gbc);
         
-        // Buttons
+
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.setBackground(Color.WHITE);
-        JButton addButton = createStyledButton("➕ Add Room", SUCCESS_COLOR);
-        JButton refreshButton = createStyledButton("🔄 Refresh", SECONDARY_COLOR);
-        filterAvailableButton = createStyledButton("👁️ Show All", PRIMARY_COLOR);
+        JButton addButton = createStyledButton(" Add Room", SUCCESS_COLOR);
+        JButton refreshButton = createStyledButton(" Refresh", SECONDARY_COLOR);
+        filterAvailableButton = createStyledButton(" Show All", PRIMARY_COLOR);
         
         addButton.addActionListener(e -> addRoom());
         refreshButton.addActionListener(e -> refreshRoomTable());
@@ -597,8 +583,8 @@ public class HostelManagementGUI extends JFrame {
         gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
         formPanel.add(buttonPanel, gbc);
         
-        // Table
-        String[] columnNames = {"Room Number", "Type", "Capacity", "Occupied", "Available", "Rent (₹)", "Floor"};
+
+        String[] columnNames = {"Room Number", "Type", "Capacity", "Occupied", "Available", "Rent (Rs Rs )", "Floor"};
         roomTableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -610,7 +596,7 @@ public class HostelManagementGUI extends JFrame {
         roomTable.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         roomTable.setRowHeight(25);
         
-        // Style table header
+
         JTableHeader roomHeader = roomTable.getTableHeader();
         roomHeader.setBackground(PRIMARY_COLOR);
         roomHeader.setForeground(Color.WHITE);
@@ -623,7 +609,7 @@ public class HostelManagementGUI extends JFrame {
         JScrollPane scrollPane = new JScrollPane(roomTable);
         scrollPane.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(PRIMARY_COLOR, 1),
-            "🛏️ All Rooms",
+            " All Rooms",
             javax.swing.border.TitledBorder.LEFT,
             javax.swing.border.TitledBorder.TOP,
             new Font("Segoe UI", Font.BOLD, 12),
@@ -642,8 +628,8 @@ public class HostelManagementGUI extends JFrame {
         double rent = (Double) rentSpinner.getValue();
         String floor = roomFloorField.getText().trim();
         
-        // Set default capacity based on room type
-        int capacity = 2; // Default capacity
+
+        int capacity = 2;
         if ("Single".equals(roomType)) {
             capacity = 1;
         } else if ("Double".equals(roomType)) {
@@ -695,10 +681,10 @@ public class HostelManagementGUI extends JFrame {
     private void toggleAvailableRoomFilter() {
         showOnlyAvailable = !showOnlyAvailable;
         if (showOnlyAvailable) {
-            filterAvailableButton.setText("👁️ Available Only");
+            filterAvailableButton.setText(" Available Only");
             filterAvailableButton.setBackground(SUCCESS_COLOR);
         } else {
-            filterAvailableButton.setText("👁️ Show All");
+            filterAvailableButton.setText(" Show All");
             filterAvailableButton.setBackground(PRIMARY_COLOR);
         }
         refreshRoomTable();
@@ -711,18 +697,18 @@ public class HostelManagementGUI extends JFrame {
         roomFloorField.setText("");
     }
     
-    // ==================== ALLOCATION PANEL ====================
+
     private JPanel createAllocationPanel() {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
         panel.setBackground(BG_COLOR);
         panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         
-        // Input form
+
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setBackground(Color.WHITE);
         formPanel.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(PRIMARY_COLOR, 2),
-            "📋 Room Allocation",
+            " Room Allocation",
             javax.swing.border.TitledBorder.LEFT,
             javax.swing.border.TitledBorder.TOP,
             new Font("Segoe UI", Font.BOLD, 12),
@@ -732,7 +718,7 @@ public class HostelManagementGUI extends JFrame {
         gbc.insets = new Insets(8, 8, 8, 8);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         
-        // Student Selection - using searchable dropdown
+
         gbc.gridx = 0; gbc.gridy = 0;
         JLabel studentLabel = new JLabel("Select Student:");
         studentLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
@@ -745,7 +731,7 @@ public class HostelManagementGUI extends JFrame {
         setupSearchableCombo(allocStudentCombo);
         formPanel.add(allocStudentCombo, gbc);
         
-        // Room Selection - using searchable dropdown
+
         gbc.gridx = 0; gbc.gridy = 1;
         JLabel roomLabel = new JLabel("Select Room:");
         roomLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
@@ -758,13 +744,13 @@ public class HostelManagementGUI extends JFrame {
         setupSearchableCombo(allocRoomCombo);
         formPanel.add(allocRoomCombo, gbc);
         
-        // Buttons
+
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.setBackground(Color.WHITE);
-        JButton allocateButton = createStyledButton("✅ Allocate Room", SUCCESS_COLOR);
-        JButton deallocateButton = createStyledButton("🚪 Deallocate", DANGER_COLOR);
-        JButton refreshButton = createStyledButton("🔄 Refresh", SECONDARY_COLOR);
-        filterActiveButton = createStyledButton("🟢 Show All", PRIMARY_COLOR);
+        JButton allocateButton = createStyledButton(" Allocate Room", SUCCESS_COLOR);
+        JButton deallocateButton = createStyledButton(" Deallocate", DANGER_COLOR);
+        JButton refreshButton = createStyledButton(" Refresh", SECONDARY_COLOR);
+        filterActiveButton = createStyledButton(" Show All", PRIMARY_COLOR);
         
         allocateButton.addActionListener(e -> allocateRoom());
         deallocateButton.addActionListener(e -> deallocateRoom());
@@ -782,7 +768,7 @@ public class HostelManagementGUI extends JFrame {
         gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 2;
         formPanel.add(buttonPanel, gbc);
         
-        // Table
+
         String[] columnNames = {"Allocation ID", "Student ID", "Student Name", "Room Number", 
                                 "Allocation Date", "Checkout Date", "Status"};
         allocationTableModel = new DefaultTableModel(columnNames, 0) {
@@ -796,7 +782,7 @@ public class HostelManagementGUI extends JFrame {
         allocationTable.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         allocationTable.setRowHeight(25);
         
-        // Style table header
+
         JTableHeader allocHeader = allocationTable.getTableHeader();
         allocHeader.setBackground(PRIMARY_COLOR);
         allocHeader.setForeground(Color.WHITE);
@@ -809,7 +795,7 @@ public class HostelManagementGUI extends JFrame {
         JScrollPane scrollPane = new JScrollPane(allocationTable);
         scrollPane.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(PRIMARY_COLOR, 1),
-            "📊 All Allocations",
+            " All Allocations",
             javax.swing.border.TitledBorder.LEFT,
             javax.swing.border.TitledBorder.TOP,
             new Font("Segoe UI", Font.BOLD, 12),
@@ -826,7 +812,7 @@ public class HostelManagementGUI extends JFrame {
         String studentId = "";
         String roomNumber = "";
         
-        // Get from dropdown
+
         String studentComboValue = (String) allocStudentCombo.getSelectedItem();
         String roomComboValue = (String) allocRoomCombo.getSelectedItem();
         
@@ -844,7 +830,7 @@ public class HostelManagementGUI extends JFrame {
         }
         
         if (hostelManager.allocateRoom(studentId, roomNumber)) {
-            JOptionPane.showMessageDialog(this, "✅ Room allocated successfully!", 
+            JOptionPane.showMessageDialog(this, " Room allocated successfully!", 
                 "Success", JOptionPane.INFORMATION_MESSAGE);
             allocStudentCombo.setSelectedIndex(-1);
             allocRoomCombo.setSelectedIndex(-1);
@@ -881,7 +867,7 @@ public class HostelManagementGUI extends JFrame {
         
         if (confirm == JOptionPane.YES_OPTION) {
             if (hostelManager.deallocateRoom(studentId)) {
-                JOptionPane.showMessageDialog(this, "✅ Room deallocated successfully!", 
+                JOptionPane.showMessageDialog(this, " Room deallocated successfully!", 
                     "Success", JOptionPane.INFORMATION_MESSAGE);
                 allocStudentCombo.setSelectedIndex(-1);
                 refreshAllocationTable();
@@ -899,7 +885,7 @@ public class HostelManagementGUI extends JFrame {
         allocationTableModel.setRowCount(0);
         List<Allocation> allocations = hostelManager.getAllAllocations();
         
-        // Filter allocations if needed
+
         if (showOnlyActive) {
             allocations = allocations.stream()
                 .filter(a -> a.getStatus().equals("Active"))
@@ -922,16 +908,16 @@ public class HostelManagementGUI extends JFrame {
     private void toggleAllocationFilter() {
         showOnlyActive = !showOnlyActive;
         if (showOnlyActive) {
-            filterActiveButton.setText("🟢 Active Only");
+            filterActiveButton.setText(" Active Only");
             filterActiveButton.setBackground(SUCCESS_COLOR);
         } else {
-            filterActiveButton.setText("🟢 Show All");
+            filterActiveButton.setText(" Show All");
             filterActiveButton.setBackground(PRIMARY_COLOR);
         }
         refreshAllocationTable();
     }
     
-    // ==================== REPORT PANEL ====================
+
     private JPanel createReportPanel() {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
         panel.setBackground(BG_COLOR);
@@ -949,7 +935,7 @@ public class HostelManagementGUI extends JFrame {
         JScrollPane scrollPane = new JScrollPane(reportArea);
         scrollPane.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(PRIMARY_COLOR, 1),
-            "📊 System Report",
+            " System Report",
             javax.swing.border.TitledBorder.LEFT,
             javax.swing.border.TitledBorder.TOP,
             new Font("Segoe UI", Font.BOLD, 12),
@@ -957,12 +943,12 @@ public class HostelManagementGUI extends JFrame {
         ));
         scrollPane.setBackground(BG_COLOR);
         
-        JButton generateButton = createStyledButton("📈 Generate Report", PRIMARY_COLOR);
+        JButton generateButton = createStyledButton("Generate Report", PRIMARY_COLOR);
         generateButton.addActionListener(e -> {
             StringBuilder report = new StringBuilder();
-            report.append("═══════════════════════════════════════════════════════════════════\n");
+            report.append("====================================================================\n");
             report.append("                  HOSTEL MANAGEMENT SYSTEM REPORT                    \n");
-            report.append("═══════════════════════════════════════════════════════════════════\n\n");
+            report.append("====================================================================\n\n");
             
             List<Student> students = hostelManager.getAllStudents();
             List<Room> rooms = hostelManager.getAllRooms();
@@ -978,29 +964,29 @@ public class HostelManagementGUI extends JFrame {
                 .mapToDouble(a -> a.getRoom().getRentPerBed())
                 .sum();
             
-            report.append("📌 SUMMARY STATISTICS\n");
-            report.append("───────────────────────────────────────────────────────────────────\n");
-            report.append(String.format("  👥 Total Students:               %d\n", students.size()));
-            report.append(String.format("  🛏️  Total Rooms:                %d\n", rooms.size()));
-            report.append(String.format("  ✅ Available Rooms:             %d\n", availableRooms.size()));
-            report.append(String.format("  🔗 Active Allocations:          %d\n", activeAllocations));
-            report.append(String.format("  💰 Total Monthly Revenue:       ₹%.2f\n", totalRevenue));
+            report.append(" SUMMARY STATISTICS\n");
+            report.append("====================================================================\n");
+            report.append(String.format("   Total Students:               %d\n", students.size()));
+            report.append(String.format("    Total Rooms:                %d\n", rooms.size()));
+            report.append(String.format("   Available Rooms:             %d\n", availableRooms.size()));
+            report.append(String.format("   Active Allocations:          %d\n", activeAllocations));
+            report.append(String.format("   Total Monthly Revenue:        Rs %.2f\n", totalRevenue));
             
-            report.append("\n🛏️ ROOM OCCUPANCY DETAILS\n");
-            report.append("───────────────────────────────────────────────────────────────────\n");
+            report.append("\n ROOM OCCUPANCY DETAILS\n");
+            report.append("====================================================================\n");
             int i = 1;
             for (Room r : rooms) {
                 double occupancyPercent = (r.getOccupied() * 100.0 / r.getCapacity());
-                String status = occupancyPercent >= 100 ? "🔴 FULL" : 
-                               occupancyPercent >= 75 ? "🟠 NEARLY FULL" : 
-                               occupancyPercent >= 50 ? "🟡 HALF FULL" : "🟢 AVAILABLE";
+                String status = occupancyPercent >= 100 ? " FULL" : 
+                               occupancyPercent >= 75 ? " NEARLY FULL" : 
+                               occupancyPercent >= 50 ? " HALF FULL" : " AVAILABLE";
                 
                 report.append(String.format("  %2d. Room %s: %d/%d occupied (%.0f%%) [%s]\n",
                     i++, r.getRoomNumber(), r.getOccupied(), r.getCapacity(), 
                     occupancyPercent, status));
             }
             
-            report.append("\n═══════════════════════════════════════════════════════════════════\n");
+            report.append("\n====================================================================\n");
             report.append("Report generated on: ").append(java.time.LocalDateTime.now()).append("\n");
             
             reportArea.setText(report.toString());
@@ -1016,7 +1002,7 @@ public class HostelManagementGUI extends JFrame {
         return panel;
     }
     
-    // ==================== LOAD INITIAL DATA ====================
+
     private void loadInitialData() {
         refreshStudentTable();
         refreshRoomTable();
@@ -1024,7 +1010,7 @@ public class HostelManagementGUI extends JFrame {
         refreshAllocationDropdowns();
     }
     
-    // ==================== MAIN METHOD ====================
+
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
